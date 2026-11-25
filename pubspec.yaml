@@ -1,0 +1,36 @@
+name: update_from_server
+description: "Flutter plugin/client for updates.905911.ru-compatible OTA server: check, download, verify SHA-256, and install updates on Android, Windows, and Linux."
+version: 0.1.0
+homepage: https://github.com/zigbug/updates
+repository: https://github.com/zigbug/updates
+issue_tracker: https://github.com/zigbug/updates/issues
+
+environment:
+  sdk: ^3.11.5
+  flutter: '>=3.3.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  crypto: ^3.0.6
+  http: ^1.2.2
+  package_info_plus: ^8.0.0
+  path: ^1.9.0
+  path_provider: ^2.1.4
+  plugin_platform_interface: ^2.1.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.example.update_from_server
+        pluginClass: UpdateFromServerPlugin
+      linux:
+        pluginClass: UpdateFromServerPlugin
+      windows:
+        pluginClass: UpdateFromServerPluginCApi
