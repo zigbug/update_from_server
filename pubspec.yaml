@@ -6,7 +6,7 @@ repository: https://github.com/zigbug/updates
 issue_tracker: https://github.com/zigbug/updates/issues
 
 environment:
-  sdk: ^3.11.5
+  sdk: ^3.10.0
   flutter: '>=3.3.0'
 
 dependencies:
@@ -28,7 +28,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.example.update_from_server
+        package: ru.server905911.update_from_server
         pluginClass: UpdateFromServerPlugin
       linux:
         pluginClass: UpdateFromServerPlugin

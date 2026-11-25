@@ -149,9 +149,35 @@ Future<void> _downloadAndInstall(BuildContext context, UpdateInfo update) async 
     status.value = 'Запуск установки...';
     progress.value = null;
     await UpdateInstaller.install(path);
+  } on UpdateInstallPermissionException catch (e) {
+    if (context.mounted) {
+      Navigator.of(context, rootNavigator: true).pop();
+      await showDialog<void>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Нужно разрешение'),
+          content: Text(
+            '${e.message}\n\nОткройте настройки и разрешите установку приложений из этого источника, затем вернитесь и нажмите «Установить» снова.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: const Text('Отмена'),
+            ),
+            FilledButton(
+              onPressed: () async {
+                await UpdateInstaller.openInstallSettings();
+                if (ctx.mounted) Navigator.of(ctx).pop();
+              },
+              child: const Text('Открыть настройки'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
   } catch (e) {
     if (context.mounted) {
-      // close progress dialog
       Navigator.of(context, rootNavigator: true).pop();
       await showDialog<void>(
         context: context,

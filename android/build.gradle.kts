@@ -1,4 +1,4 @@
-group = "com.example.update_from_server"
+group = "ru.server905911.update_from_server"
 version = "1.0-SNAPSHOT"
 
 buildscript {
@@ -27,7 +27,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.update_from_server"
+    namespace = "ru.server905911.update_from_server"
 
     compileSdk = 36
 

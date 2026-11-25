@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.example.update_from_server">
+  package="ru.server905911.update_from_server">
 
   <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 

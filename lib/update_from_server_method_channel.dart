@@ -14,9 +14,29 @@ class MethodChannelUpdateFromServer extends UpdateFromServerPlatform {
   }
 
   @override
+  Future<bool> canInstall() async {
+    if (defaultTargetPlatform != TargetPlatform.android) return true;
+    final ok = await methodChannel.invokeMethod<bool>('canInstall');
+    return ok ?? true;
+  }
+
+  @override
+  Future<void> openInstallSettings() async {
+    if (defaultTargetPlatform != TargetPlatform.android) return;
+    await methodChannel.invokeMethod<void>('openInstallSettings');
+  }
+
+  @override
   Future<bool?> installUpdate(String filePath) async {
-    return methodChannel.invokeMethod<bool>('installUpdate', {
-      'filePath': filePath,
-    });
+    try {
+      return await methodChannel.invokeMethod<bool>('installUpdate', {
+        'filePath': filePath,
+      });
+    } on PlatformException catch (e) {
+      if (e.code == 'permission_required') {
+        throw UpdateInstallPermissionException(e.message ?? 'Нужно разрешение на установку');
+      }
+      rethrow;
+    }
   }
 }

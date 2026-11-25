@@ -1,10 +1,11 @@
-package com.example.update_from_server
+package ru.server905911.update_from_server
 
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.provider.Settings
 import androidx.core.content.FileProvider
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
@@ -28,21 +29,51 @@ class UpdateFromServerPlugin : FlutterPlugin, MethodCallHandler {
             "getPlatformVersion" -> {
                 result.success("Android ${Build.VERSION.RELEASE}")
             }
+            "canInstall" -> {
+                result.success(canInstall())
+            }
+            "openInstallSettings" -> {
+                openInstallSettings()
+                result.success(true)
+            }
             "installUpdate" -> {
                 val filePath = call.argument<String>("filePath")
                 if (filePath.isNullOrBlank()) {
                     result.error("invalid_args", "filePath is required", null)
                     return
                 }
+                if (!canInstall()) {
+                    result.error(
+                        "permission_required",
+                        "Разрешите установку приложений из этого источника и повторите.",
+                        null
+                    )
+                    return
+                }
                 try {
                     installApk(filePath)
                     result.success(true)
                 } catch (e: Exception) {
-                    result.error("install_failed", e.message, null)
+                    result.error("install_failed", e.message ?: "cannot install", null)
                 }
             }
             else -> result.notImplemented()
         }
+    }
+
+    private fun canInstall(): Boolean =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.packageManager.canRequestPackageInstalls()
+        } else {
+            true
+        }
+
+    private fun openInstallSettings() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
+        val intent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES)
+            .setData(Uri.parse("package:${context.packageName}"))
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
     }
 
     private fun installApk(filePath: String) {

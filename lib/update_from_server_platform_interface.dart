@@ -20,6 +20,10 @@ abstract class UpdateFromServerPlatform extends PlatformInterface {
     throw UnimplementedError('getPlatformVersion() has not been implemented.');
   }
 
+  Future<bool> canInstall() async => true;
+
+  Future<void> openInstallSettings() async {}
+
   /// Launches platform-specific installation for the artifact at [filePath].
   /// Returns true if the install flow was started.
   Future<bool?> installUpdate(String filePath) {
