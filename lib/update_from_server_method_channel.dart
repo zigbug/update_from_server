@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
+import 'src/update_installer.dart';
 import 'update_from_server_platform_interface.dart';
 
 /// Method-channel implementation of [UpdateFromServerPlatform].
